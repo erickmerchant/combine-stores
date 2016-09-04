@@ -1,6 +1,6 @@
 {
   "name": "@erickmerchant/state-container",
-  "version": "1.0.4",
+  "version": "2.0.0",
   "main": "dist/main.js",
   "scripts": {
     "test": "standard && tape 'test.js' | faucet",
