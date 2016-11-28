@@ -13,7 +13,7 @@ module.exports = function (stores) {
   }
 
   function store (state, prop, ...args) {
-    if (!state) {
+    if (state == null) {
       state = {}
 
       map.forEach(function (store, prop) {
