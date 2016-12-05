@@ -1,36 +1,33 @@
-const set = require('lodash.set')
-const get = require('lodash.get')
-
 module.exports = function (stores) {
-  const map = new Map()
+  const reducers = new Map()
 
   stores(add)
 
   return store
 
   function add (prop, store) {
-    map.set(prop, store)
+    reducers.set(prop, store)
   }
 
   function store (state, prop, ...args) {
     if (state == null) {
       state = {}
 
-      map.forEach(function (store, prop) {
+      reducers.forEach(function (store, prop) {
         const val = store(undefined, ...args)
 
-        set(state, prop, val)
+        state[prop] = val
       })
     }
 
-    if (prop) {
-      const store = map.get(prop)
+    if (prop != null && reducers.has(prop)) {
+      const store = reducers.get(prop)
 
-      const previous = get(state, prop, undefined)
+      const previous = state[prop]
 
       const val = store(previous, ...args)
 
-      set(state, prop, val)
+      state[prop] = val
     }
 
     return state
