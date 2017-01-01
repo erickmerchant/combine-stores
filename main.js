@@ -6,28 +6,30 @@ module.exports = function (stores) {
   return store
 
   function add (prop, store) {
-    reducers.set(prop, store)
+    let stores = []
+
+    if (reducers.has(prop)) {
+      stores = reducers.get(prop)
+    }
+
+    stores.push(store)
+
+    reducers.set(prop, stores)
   }
 
   function store (state, prop, ...args) {
     if (state == null) {
       state = {}
 
-      reducers.forEach(function (store, prop) {
-        const val = store(undefined, ...args)
-
-        state[prop] = val
+      reducers.forEach((stores, prop) => {
+        state[prop] = stores.reduce((val, store) => store(val, ...args), undefined)
       })
     }
 
-    if (prop != null && reducers.has(prop)) {
-      const store = reducers.get(prop)
+    if (reducers.has(prop)) {
+      const stores = reducers.get(prop)
 
-      const previous = state[prop]
-
-      const val = store(previous, ...args)
-
-      state[prop] = val
+      state[prop] = stores.reduce((val, store) => store(val, ...args), state[prop])
     }
 
     return state
