@@ -21,17 +21,19 @@ module.exports = function (stores) {
     if (state == null) {
       state = {}
 
-      reducers.forEach((stores, prop) => {
-        state[prop] = stores.reduce((val, store) => store(val, ...args), undefined)
+      reducers.forEach(function (stores, prop) {
+        reduce(stores, prop)
       })
-    }
-
-    if (reducers.has(prop)) {
+    } else if (reducers.has(prop)) {
       const stores = reducers.get(prop)
 
-      state[prop] = stores.reduce((val, store) => store(val, ...args), state[prop])
+      reduce(stores, prop, state[prop])
     }
 
     return state
+
+    function reduce (stores, prop, initial) {
+      state[prop] = stores.reduce((val, store) => store(val, ...args), initial)
+    }
   }
 }
