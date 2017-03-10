@@ -31,27 +31,17 @@ framework({target, store, component, diff})
 
 ## API Reference
 
-### Framework Code
+### container
 
-#### container
-
-_container(callback)_
+_container((define) => { ... })_
 
 The function exported by this module.
 
-- callback: see [container callback](#container-callback)
+- [define](#define)
 
-#### define
+### define
 
 _define(property, store)_
 
 - property: the property that the store will handle
 - store: [a store](https://github.com/erickmerchant/framework#store). When it is called it is only passed the property that it handles as the first argument. When called with no arguments it should return the default for that property.
-
-### Application Code
-
-#### container callback
-
-_callback(define)_
-
-- define: see [define](#define)
