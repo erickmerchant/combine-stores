@@ -1,4 +1,4 @@
-# @erickmerchant/state-container
+# @erickmerchant/combine-stores
 
 Meant to be used with [@erickmerchant/framework](https://github.com/erickmerchant/framework), it can be used to construct a store that's easy to organize. It defines a state that is an object and each store that you define handles a single property on that object.
 
@@ -9,7 +9,7 @@ const framework = require('@erickmerchant/framework')
 
 /* here is the relevant stuff */
 
-const container = require('@erickmerchant/state-container')
+const container = require('@erickmerchant/combine-stores')
 
 const store = container(function (define) {
   define('errors', require('./stores/errors'))
