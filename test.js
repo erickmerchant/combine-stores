@@ -1,4 +1,4 @@
-var test = require('tape')
+const test = require('tape')
 
 test('test simple case', function (t) {
   t.plan(3)
