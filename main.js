@@ -1,5 +1,5 @@
 module.exports = function (stores) {
-  const reducers = new Map()
+  const reducers = {}
 
   stores(add)
 
@@ -8,24 +8,24 @@ module.exports = function (stores) {
   function add (prop, store) {
     let stores = []
 
-    if (reducers.has(prop)) {
-      stores = reducers.get(prop)
+    if (reducers[prop] != null) {
+      stores = reducers[prop]
     }
 
     stores.push(store)
 
-    reducers.set(prop, stores)
+    reducers[prop] = stores
   }
 
   function store (state, prop, ...args) {
     if (state == null) {
       state = {}
 
-      reducers.forEach(function (stores, prop) {
-        reduce(stores, prop)
+      Object.keys(reducers).forEach(function (prop) {
+        reduce(reducers[prop], prop)
       })
-    } else if (reducers.has(prop)) {
-      const stores = reducers.get(prop)
+    } else if (reducers[prop] != null) {
+      const stores = reducers[prop]
 
       reduce(stores, prop, state[prop])
     }
