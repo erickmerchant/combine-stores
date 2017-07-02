@@ -16,9 +16,9 @@
   "description": "A module to create a store from other stores where each is responsible for one property in the state.",
   "devDependencies": {
     "faucet": "0.0.1",
-    "nyc": "^11.0.2",
+    "nyc": "^11.0.3",
     "standard": "^10.0.0",
-    "tape": "^4.6.0"
+    "tape": "^4.7.0"
   },
   "dependencies": {}
 }
