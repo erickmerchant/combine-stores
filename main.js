@@ -1,39 +1,41 @@
-module.exports = function (stores) {
+module.exports = function (adder) {
   const reducers = {}
 
-  stores(add)
+  adder(add)
 
   return store
 
   function add (prop, store) {
-    let stores = []
-
-    if (reducers[prop] != null) {
-      stores = reducers[prop]
-    }
-
-    stores.push(store)
-
-    reducers[prop] = stores
+    reducers[prop] = store
   }
 
-  function store (state, prop, ...args) {
-    if (state == null) {
-      state = {}
+  function store (seed) {
+    seed(function (commit) {
+      const state = {}
 
       Object.keys(reducers).forEach(function (prop) {
-        reduce(reducers[prop], prop)
+        reducers[prop] = reducers[prop](function (seed) {
+          if (typeof seed === 'function') {
+            state[prop] = seed(commit)
+          } else {
+            state[prop] = seed
+          }
+        })
       })
-    } else if (reducers[prop] != null) {
-      const stores = reducers[prop]
 
-      reduce(stores, prop, state[prop])
-    }
+      return state
+    })
 
-    return state
+    return function (commit, prop, ...args) {
+      if (reducers[prop] != null) {
+        reducers[prop](function (current) {
+          commit(function (state) {
+            state[prop] = current(state[prop])
 
-    function reduce (stores, prop, initial) {
-      state[prop] = stores.reduce((val, store) => store(val, ...args), initial)
+            return state
+          })
+        }, ...args)
+      }
     }
   }
 }

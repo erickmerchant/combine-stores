@@ -6,76 +6,66 @@ test('test simple case', function (t) {
   const main = require('./main')
 
   const store = main(function (add) {
-    add('count', function (state, action) {
-      if (state == null) {
-        state = 0
-      }
+    add('count', function (seed) {
+      seed(0)
 
-      if (action === 'increment') {
-        state += 1
-      }
+      return function (commit, action) {
+        if (action === 'increment') {
+          commit((state) => state + 1)
+        }
 
-      if (action === 'decrement') {
-        state -= 1
+        if (action === 'decrement') {
+          commit((state) => state - 1)
+        }
       }
-
-      return state
     })
   })
 
-  t.deepEqual(store(), {count: 0})
+  const action = store(function (seed) {
+    t.deepEqual(seed(), {count: 0})
+  })
 
-  t.deepEqual(store({count: 5}, 'count', 'increment'), {count: 6})
+  action(function (current) {
+    t.deepEqual(current({count: 5}), {count: 6})
+  }, 'count', 'increment')
 
-  t.deepEqual(store({count: 5}, 'count', 'decrement'), {count: 4})
+  action(function (current) {
+    t.deepEqual(current({count: 5}), {count: 4})
+  }, 'count', 'decrement')
 })
 
 test('test complex case', function (t) {
-  t.plan(5)
+  t.plan(3)
 
   const main = require('./main')
 
   const store = main(function (add) {
-    add('count', function (state, action, number) {
-      if (state == null) {
-        state = 0
+    add('count', function (seed) {
+      seed(function (commit) {
+        return 0
+      })
+
+      return function (commit, action) {
+        if (action === 'increment') {
+          commit((state) => state + 1)
+        }
+
+        if (action === 'decrement') {
+          commit((state) => state - 1)
+        }
       }
-
-      if (action === 'add') {
-        state += number
-      }
-
-      if (action === 'subtract') {
-        state -= number
-      }
-
-      return state
-    })
-
-    add('count', function (state, action, number) {
-      if (state == null) {
-        state = 0
-      }
-
-      if (action === 'multiply') {
-        state *= number
-      }
-
-      if (action === 'divide') {
-        state /= number
-      }
-
-      return state
     })
   })
 
-  t.deepEqual(store(), {count: 0})
+  const action = store(function (seed) {
+    t.deepEqual(seed(), {count: 0})
+  })
 
-  t.deepEqual(store({count: 5}, 'count', 'add', 5), {count: 10})
+  action(function (current) {
+    t.deepEqual(current({count: 5}), {count: 6})
+  }, 'count', 'increment')
 
-  t.deepEqual(store({count: 5}, 'count', 'subtract', 5), {count: 0})
-
-  t.deepEqual(store({count: 5}, 'count', 'multiply', 5), {count: 25})
-
-  t.deepEqual(store({count: 5}, 'count', 'divide', 5), {count: 1})
+  action(function (current) {
+    t.deepEqual(current({count: 5}), {count: 4})
+  }, 'count', 'decrement')
 })
