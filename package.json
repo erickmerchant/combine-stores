@@ -1,6 +1,6 @@
 {
   "name": "@erickmerchant/combine-stores",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "main.js",
   "scripts": {
     "test": "standard && tape 'test.js' | faucet",
